@@ -1,0 +1,47 @@
+{
+  "name": "n8n-nodes-sqlite-wasm",
+  "version": "0.1.0",
+  "description": "Read-only SQLite community nodes for n8n using sql.js (WASM).",
+  "license": "MIT",
+  "homepage": "https://github.com/Aodaruma/n8n-nodes-sqlite-wasm",
+  "keywords": [
+    "n8n-community-node-package",
+    "n8n",
+    "sqlite",
+    "sql.js",
+    "wasm",
+    "health-connect"
+  ],
+  "author": { "name": "Aodaruma", "email": "skyblue.1007.sakkyoku@gmail.com" },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Aodaruma/n8n-nodes-sqlite-wasm.git"
+  },
+  "scripts": {
+    "build": "n8n-node build",
+    "build:watch": "tsc --watch",
+    "dev": "n8n-node dev",
+    "lint": "n8n-node lint",
+    "lint:fix": "n8n-node lint --fix",
+    "release": "n8n-node release",
+    "prepublishOnly": "n8n-node prerelease",
+    "test": "vitest run"
+  },
+  "files": ["dist"],
+  "n8n": {
+    "n8nNodesApiVersion": 1,
+    "strict": false,
+    "nodes": ["dist/nodes/SQLiteWasm/SqliteWasm.node.js"]
+  },
+  "devDependencies": {
+    "@n8n/node-cli": "*",
+    "@types/node": "^22.0.0",
+    "@types/sql.js": "*",
+    "eslint": "9.29.0",
+    "prettier": "3.8.3",
+    "release-it": "20.2.0",
+    "typescript": "5.9.3",
+    "vitest": "^4.0.0"
+  },
+  "peerDependencies": { "n8n-workflow": "*" }
+}
