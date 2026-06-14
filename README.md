@@ -1,28 +1,28 @@
 # n8n-nodes-sqlite-wasm
 
-`sql.js` を使って SQLite を read-only で扱う、self-hosted n8n 向け community node です。native addon に依存しないため、`better-sqlite3` や `sqlite3` を増やしたくない環境でも扱えます。
+Self-hosted n8n community node for working with SQLite in read-only mode via `sql.js`. It does not rely on native addons, so it is suitable for environments where you do not want to add `better-sqlite3` or `sqlite3`.
 
 ## Included Node
 
 - `SQLite WASM`
-  - `Query Database`
-  - `List Tables`
-  - `Describe Table`
+- `Query Database`
+- `List Tables`
+- `Describe Table`
 
 ## Features
 
-- `sql.js` ベースの SQLite 読み込み
-- binary input と file path input の両対応
-- read-only SQL 制限
-- 単一 statement 制限
-- `items` / `singleItem` の返却モード
+- SQLite loading powered by `sql.js`
+- Supports both binary input and file path input
+- Read-only SQL restrictions
+- Single-statement enforcement
+- `items` / `singleItem` return modes
 
 ## Usage Notes
 
-- `Query Database` は `SELECT` / `WITH ... SELECT` / `PRAGMA table_info(...)` のみ許可します
-- `ATTACH`, `DROP`, `ALTER`, `VACUUM`, `load_extension` などは拒否します
-- file path mode は allowed prefixes 内のファイルのみ読み込みます
-- verified node 前提ではありません。external dependency として `sql.js` を使用します
+- `Query Database` only allows `SELECT`, `WITH ... SELECT`, and `PRAGMA table_info(...)`
+- Statements such as `ATTACH`, `DROP`, `ALTER`, `VACUUM`, and `load_extension` are rejected
+- File path mode only reads files under the configured allowed prefixes
+- This package is intended for self-hosted n8n and uses `sql.js` as an external dependency
 
 ## Development
 
