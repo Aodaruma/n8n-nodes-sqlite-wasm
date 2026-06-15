@@ -1,6 +1,6 @@
 {
   "name": "n8n-nodes-sqlite-wasm",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Read-only SQLite community nodes for n8n using sql.js (WASM).",
   "license": "MIT",
   "homepage": "https://github.com/Aodaruma/n8n-nodes-sqlite-wasm",
@@ -27,7 +27,7 @@
     "lint": "n8n-node lint",
     "lint:fix": "n8n-node lint --fix",
     "release": "n8n-node release",
-    "prepublishOnly": "n8n-node prerelease && node scripts/copy-vendor.mjs",
+    "prepublishOnly": "npm run build",
     "test": "vitest run"
   },
   "files": ["dist"],

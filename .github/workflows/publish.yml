@@ -8,7 +8,7 @@
 # ─── PREREQUISITES ─────────────────────────────────────────────────────────────
 #
 # Keep @n8n/node-cli up to date. npm publish runs this project's
-# `prepublishOnly` hook (`n8n-node prerelease`) before uploading the package.
+# `prepublishOnly` hook before uploading the package.
 #
 # ─── ONE-TIME SETUP ────────────────────────────────────────────────────────────
 #
@@ -106,8 +106,7 @@ jobs:
           if [ -n "$NPM_TOKEN" ]; then
             printf '%s\n' \
               "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" \
-              "registry=https://registry.npmjs.org/" \
-              "always-auth=true" > "$HOME/.npmrc"
+              "registry=https://registry.npmjs.org/" > "$HOME/.npmrc"
           fi
 
           npm publish --access public --provenance
