@@ -16,6 +16,7 @@ Self-hosted n8n community node for working with SQLite in read-only mode via `sq
 - Read-only SQL restrictions
 - Single-statement enforcement
 - `items` / `singleItem` return modes
+- Unexpected failures raise node errors for n8n retries and error handling
 
 ## Usage Notes
 
@@ -23,6 +24,7 @@ Self-hosted n8n community node for working with SQLite in read-only mode via `sq
 - Statements such as `ATTACH`, `DROP`, `ALTER`, `VACUUM`, and `load_extension` are rejected
 - File path mode only reads files under the configured allowed prefixes
 - This package is intended for self-hosted n8n and uses `sql.js` as an external dependency
+- If you want downstream execution after an item-level failure, use n8n's built-in `Continue On Fail`
 
 ## Development
 

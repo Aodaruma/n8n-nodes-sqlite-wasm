@@ -181,13 +181,6 @@ export class SqliteWasm implements INodeType {
 				],
 				default: 'items',
 			},
-			{
-				displayName: 'Fail On Error',
-				name: 'failOnError',
-				type: 'boolean',
-				default: false,
-				description: 'Whether to throw instead of returning a structured error payload',
-			},
 		],
 	};
 
@@ -196,8 +189,6 @@ export class SqliteWasm implements INodeType {
 		const returnData: INodeExecutionData[] = [];
 
 		for (let itemIndex = 0; itemIndex < items.length; itemIndex++) {
-			const failOnError = this.getNodeParameter('failOnError', itemIndex, false) as boolean;
-
 			try {
 				const operation = this.getNodeParameter('operation', itemIndex) as SqliteOperation;
 				const returnMode = this.getNodeParameter('returnMode', itemIndex, 'items') as SqliteReturnMode;
@@ -207,7 +198,6 @@ export class SqliteWasm implements INodeType {
 				if (returnMode === 'singleItem') {
 					returnData.push({
 						json: {
-							ok: true,
 							source: 'sqliteWasm',
 							operation,
 							inputMode: database.inputMode,
@@ -228,25 +218,22 @@ export class SqliteWasm implements INodeType {
 					});
 				}
 			} catch (error) {
-				const message = error instanceof Error ? error.message : 'Unknown SQLite error';
+				const nodeError = new NodeOperationError(
+					this.getNode(),
+					error instanceof Error ? error.message : 'Unknown SQLite error',
+					{ itemIndex },
+				);
 
-				if (failOnError && !this.continueOnFail()) {
-					throw new NodeOperationError(this.getNode(), message, { itemIndex });
+				if (this.continueOnFail()) {
+					returnData.push({
+						json: {},
+						pairedItem: itemIndex,
+						error: nodeError,
+					});
+					continue;
 				}
 
-				returnData.push({
-					json: {
-						ok: false,
-						source: 'sqliteWasm',
-						error: {
-							message,
-						},
-						rows: [],
-						columns: [],
-						rowCount: 0,
-					} as IDataObject,
-					pairedItem: itemIndex,
-				});
+				throw nodeError;
 			}
 		}
 
