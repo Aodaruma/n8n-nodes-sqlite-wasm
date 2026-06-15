@@ -1,6 +1,6 @@
 {
   "name": "n8n-nodes-sqlite-wasm",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Read-only SQLite community nodes for n8n using sql.js (WASM).",
   "license": "MIT",
   "homepage": "https://github.com/Aodaruma/n8n-nodes-sqlite-wasm",
