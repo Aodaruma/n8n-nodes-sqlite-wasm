@@ -17,14 +17,17 @@
     "type": "git",
     "url": "https://github.com/Aodaruma/n8n-nodes-sqlite-wasm.git"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
-    "build": "n8n-node build",
+    "build": "n8n-node build && node scripts/copy-vendor.mjs",
     "build:watch": "tsc --watch",
     "dev": "n8n-node dev",
     "lint": "n8n-node lint",
     "lint:fix": "n8n-node lint --fix",
     "release": "n8n-node release",
-    "prepublishOnly": "n8n-node prerelease",
+    "prepublishOnly": "n8n-node prerelease && node scripts/copy-vendor.mjs",
     "test": "vitest run"
   },
   "files": ["dist"],

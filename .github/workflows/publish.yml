@@ -7,15 +7,8 @@
 #
 # ─── PREREQUISITES ─────────────────────────────────────────────────────────────
 #
-# @n8n/node-cli ≥ 0.23.0 is required. Earlier versions do not support the
-# provenance flag passed by `npm run release` in CI, and the publish step will
-# fail. Check the version installed in this project with:
-#
-#   npm list @n8n/node-cli
-#
-# To upgrade:
-#
-#   npm install --save-dev @n8n/node-cli@latest
+# Keep @n8n/node-cli up to date. npm publish runs this project's
+# `prepublishOnly` hook (`n8n-node prerelease`) before uploading the package.
 #
 # ─── ONE-TIME SETUP ────────────────────────────────────────────────────────────
 #
@@ -51,8 +44,8 @@
 #
 #   npm run release
 #
-# This will lint, build, prompt for a version bump, update the changelog,
-# commit, tag, and push — which triggers this workflow to publish to npm.
+# This bumps the version, creates a git tag, and pushes it. The tag push
+# triggers this workflow, which runs test/lint/build and publishes to npm.
 
 name: Publish
 
@@ -80,22 +73,41 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 'lts/*'
+          # Trusted publishing requires npm 11.5.1+ and Node 22.14.0+.
+          node-version: '24.x'
           cache: 'npm'
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Release
-        # Publishes to npm with a provenance attestation (requires id-token: write above).
-        # Lint and build run automatically as part of the release process.
-        #
-        # Option A (OIDC): leave NPM_TOKEN unset — the token step is skipped and
-        #   npm uses the OIDC exchange instead.
-        # Option B (token): set NPM_TOKEN in repo secrets — it is written to
-        #   .npmrc here before publishing.
+      - name: Run tests
+        run: npm test
+
+      - name: Run lint
+        run: npm run lint
+
+      - name: Run build
+        run: npm run build
+
+      - name: Verify tag matches package version
         run: |
-          [ -n "$NPM_TOKEN" ] && npm config set //registry.npmjs.org/:_authToken "$NPM_TOKEN"
-          npm run release
+          PACKAGE_VERSION="$(node -p "require('./package.json').version")"
+          if [ "$GITHUB_REF_NAME" != "$PACKAGE_VERSION" ]; then
+            echo "Tag $GITHUB_REF_NAME does not match package version $PACKAGE_VERSION"
+            exit 1
+          fi
+
+      - name: Publish package
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_CONFIG_PROVENANCE: 'true'
+        run: |
+          npm config set registry https://registry.npmjs.org/
+          if [ -n "$NPM_TOKEN" ]; then
+            printf '%s\n' \
+              "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" \
+              "registry=https://registry.npmjs.org/" \
+              "always-auth=true" > "$HOME/.npmrc"
+          fi
+
+          npm publish --access public --provenance
