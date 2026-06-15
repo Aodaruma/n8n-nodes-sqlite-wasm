@@ -2,6 +2,7 @@ import { mkdtemp, rm, writeFile } from 'fs/promises';
 import os from 'os';
 import path from 'path';
 import { afterEach, describe, expect, it } from 'vitest';
+import { SqliteWasm } from '../nodes/SQLiteWasm/SqliteWasm.node';
 import initSqlJs from '../nodes/SQLiteWasm/vendor/sql-wasm.js';
 import {
 	buildDescribeTableQuery,
@@ -88,5 +89,9 @@ describe('sqliteWasm.utils', () => {
 
 		expect(result.fileName).toBe('sample.db');
 		expect(describe.rowCount).toBe(2);
+	});
+
+	it('exports the node class name expected by the n8n loader', () => {
+		expect(SqliteWasm.name).toBe('SqliteWasm');
 	});
 });

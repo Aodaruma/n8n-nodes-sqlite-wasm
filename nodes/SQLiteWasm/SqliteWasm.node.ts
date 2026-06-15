@@ -29,7 +29,7 @@ interface SqliteDatabaseInput {
 	allowedPathPrefixes?: string[];
 }
 
-export class SQLiteWasm implements INodeType {
+export class SqliteWasm implements INodeType {
 	description: INodeTypeDescription = {
 		displayName: 'SQLite WASM',
 		name: 'sqliteWasm',
