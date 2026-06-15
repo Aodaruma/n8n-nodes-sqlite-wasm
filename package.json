@@ -38,7 +38,7 @@
   },
   "devDependencies": {
     "@n8n/node-cli": "*",
-    "@types/node": "^22.0.0",
+    "@types/node": "^25.9.3",
     "@types/sql.js": "*",
     "eslint": "9.29.0",
     "prettier": "3.8.3",
